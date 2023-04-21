@@ -108,7 +108,6 @@
 DROP TABLE IF EXISTS movies;
 DROP TABLE IF EXISTS studios;
 DROP TABLE IF EXISTS casts;
-DROP TABLE IF EXISTS cast_role;
 
 -- Create new tables, according to your domain model
 -- TODO!
@@ -129,15 +128,10 @@ CREATE TABLE studios (
 CREATE TABLE casts (
     id INTEGER PRIMARY KEY AUTOINCREMENT,
     movie_id INTEGER,
-    cast_name TEXT
+    cast_name TEXT,
+    cast_role TEXT
 );
 
-CREATE TABLE cast_role (
-    id INTEGER PRIMARY KEY AUTOINCREMENT,
-    movie_id INTEGER,
-    cast_id INTEGER,
-    role_name TEXT
-);
 
 -- Insert data into your database that reflects the sample data shown above
 -- Use hard-coded foreign key IDs when necessary
@@ -159,32 +153,23 @@ VALUES
 INSERT INTO studios (studio_name)
 VALUES ('Warner Bros.');
 
-INSERT INTO casts (cast_name)
-VALUES ('Christian Bale','Michael Caine',' Liam Neeson ','Katie Holmes','Gary Oldman','Christian Bale ','Heath Ledger');
-
-INSERT INTO casts_role (role_name)
-VALUES('Bruce Wayne','Alfred','Ras Al Ghul');
-
-
-
-
-
-
--- Batman Begins          Christian Bale        Bruce Wayne
--- Batman Begins          Michael Caine         Alfred
--- Batman Begins          Liam Neeson           Ra's Al Ghul
--- Batman Begins          Katie Holmes          Rachel Dawes
--- Batman Begins          Gary Oldman           Commissioner Gordon
--- The Dark Knight        Christian Bale        Bruce Wayne
--- The Dark Knight        Heath Ledger          Joker
--- The Dark Knight        Aaron Eckhart         Harvey Dent
--- The Dark Knight        Michael Caine         Alfred
--- The Dark Knight        Maggie Gyllenhaal     Rachel Dawes
--- The Dark Knight Rises  Christian Bale        Bruce Wayne
--- The Dark Knight Rises  Gary Oldman           Commissioner Gordon
--- The Dark Knight Rises  Tom Hardy             Bane
--- The Dark Knight Rises  Joseph Gordon-Levitt  John Blake
--- The Dark Knight Rises  Anne Hathaway         Selina Kyle
+INSERT INTO casts (movie_id, cast_name, cast_role)
+VALUES
+(1,'Christian Bale', 'Bruce Wayne'),
+(1,'Michael Caine', 'Alfred'),
+(1,'Liam Neeson','Ra''s Al Ghul'),
+(1,'Katie Holmes', 'Rachel Dawes'),
+(1,'Gary Oldman', 'Commissioner Gordon'),
+(2,'Christian Bale', 'Bruce Wayne'),
+(2,'Heath Ledger', 'Joker'),
+(2,'Aaron Eckhart', 'Harvey Dent'),
+(2,'Michael Caine', 'Alfred'),
+(2,'Maggie Gyllenhaal', 'Rachel Dawes'),
+(3,'Christian Bale','Bruce Wayne'),
+(3,'Gary Oldman', 'Commissioner Gordon'),
+(3,'Tom Hardy','Bane'),
+(3,'Joseph Gordon-Levitt','John Blake'),
+(3,'Anne Hathaway','Selina Kyle');
 
 -- Prints a header for the movies output
 .print "Movies"
@@ -194,7 +179,7 @@ VALUES('Bruce Wayne','Alfred','Ras Al Ghul');
 -- The SQL statement for the movies output
 -- TODO!
 
-SELECT movie_title, year_released, MPAA_rating, studio
+SELECT id, movie_title, year_released, MPAA_rating, studio
 FROM movies
 ;
 
@@ -207,4 +192,6 @@ FROM movies
 -- The SQL statement for the cast output
 -- TODO!
 
-
+SELECT movies.movie_title, casts.cast_name, casts.cast_role
+FROM movies INNER JOIN casts ON movies.id = casts.movie_id
+;
